@@ -7,7 +7,10 @@
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository":"https://github.com/iamkramzTech/sapp-system",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/iamkramzTech/sapp-system.git"
+},
   "keywords": [
     "Electron",
     "desktop",
