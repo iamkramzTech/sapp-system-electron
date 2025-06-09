@@ -1,0 +1,26 @@
+{
+  "name": "sapp-system",
+  "version": "1.0.0",
+  "description": "Sacrament Record Management and Information System for Saint Anthony of Padua Parish",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository":"https://github.com/iamkramzTech/sapp-system",
+  "keywords": [
+    "Electron",
+    "desktop",
+    "parish",
+    "project",
+    "sacrament"
+  ],
+  "author": "kramz",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^36.4.0"
+  },
+  "dependencies": {
+    "mysql2": "^3.14.1"
+  }
+}
