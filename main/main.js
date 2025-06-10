@@ -1,6 +1,7 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow,ipcMain } = require('electron');
 const url = require('url');
 const path = require('node:path');
+const db = require('./db');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,19 +12,15 @@ const createWindow = () => {
         width: 800,
         height: 600,
         webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(app.getAppPath(), 'preload','preload.js')
         }
     });
     //win.setResizable(false);
-    win.loadURL(url.format({
-        pathname: path.join(__dirname,'views/login.html'),
-        protocol:'file',
-        slashes:true
-    }));
+    win.loadFile(path.join(app.getAppPath(),'renderer','views','registration.html'));
     win.on('closed', () => {
         app.quit();
     });
-    win.webContents.openDevTools();
+   // win.webContents.openDevTools();
 
     // Emitted when the window is closed.
     win.on('closed', () => {
@@ -64,3 +61,18 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+ipcMain.handle('get-cities',async()=>{
+ return new Promise((resolve,reject)=>{
+    db.query('SELECT Name, CountryCode, Population FROM city LIMIT 10',(err,result) => {
+        if(err)
+        {
+            reject(err);
+        }
+        else
+        {
+            resolve(result);
+        }
+    });
+ });
+});
