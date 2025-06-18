@@ -1,6 +1,7 @@
 const { app, BrowserWindow,ipcMain } = require('electron');
 const url = require('url');
 const path = require('node:path');
+// require('dotenv').config();
 const db = require('./db');
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -16,7 +17,7 @@ const createWindow = () => {
         }
     });
     //win.setResizable(false);
-    win.loadFile(path.join(app.getAppPath(),'renderer','views','registration.html'));
+    win.loadFile(path.join(app.getAppPath(),'renderer','views','cities.html'));
     win.on('closed', () => {
         app.quit();
     });
