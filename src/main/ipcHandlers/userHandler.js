@@ -1,10 +1,10 @@
-const { ipcMain } = require('electron');
-const db = require('../db');
-const bcrypt = require('bcrypt');
+import { ipcMain } from 'electron';
+import {databaseConnection} from '../db';
+import bcrypt from 'bcrypt';
 
 ipcMain.handle('login-user', async (event, { email, password }) => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT * FROM users WHERE email_address = ?', [email], async (err, results) => {
+    databaseConnection.query('SELECT * FROM users WHERE email_address = ?', [email], async (err, results) => {
       if (err) return reject(err);
       if (results.length === 0) return resolve({ success: false });
 
@@ -19,7 +19,7 @@ ipcMain.handle('register-user', async (event, { username, email, phone, password
   return new Promise(async (resolve, reject) => {
     try {
       // Check if the email already exists
-      db.query('SELECT * FROM users WHERE email_address = ?', [email], async (err, results) => {
+      databaseConnection.query('SELECT * FROM users WHERE email_address = ?', [email], async (err, results) => {
         if (err) return reject(err);
         if (results.length > 0) return resolve({ success: false, message: 'Email already registered' });
 
@@ -28,7 +28,7 @@ ipcMain.handle('register-user', async (event, { username, email, phone, password
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
         // Insert the new user
-        db.query(
+        databaseConnection.query(
           `INSERT INTO users (user_name, email_address, phone_number, password_hash, full_name)
            VALUES (?, ?, ?, ?, ?)`,
           [username, email, phone, hashedPassword, fullName],

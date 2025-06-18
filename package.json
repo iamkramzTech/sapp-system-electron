@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Sacrament Record Management and Information System for Saint Anthony of Padua Parish",
   "main": "src/main/main.js",
+  "type": "module",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
