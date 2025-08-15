@@ -1,8 +1,8 @@
-import dotenv from 'dotenv'
+const dotenv = require('dotenv');
 dotenv.config();
 const { NODE_ENV, APP_VERSION, SECRET_KEY, SECRET_IV, ENCRYPTION_METHOD } = process.env;
 
-export default{
+module.exports = {
     env: NODE_ENV,
     version: APP_VERSION,
     secret_key: SECRET_KEY,

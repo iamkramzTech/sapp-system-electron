@@ -1,6 +1,6 @@
-import { app, BrowserWindow, globalShortcut, dialog } from 'electron';
-import path from 'node:path';
-import './ipcHandlers/users/userHandler.js';
+const { app, BrowserWindow, globalShortcut, dialog } = require('electron');
+const path = require('path');
+const { registerAllHandlers } = require('./ipcHandlers/index')
 let window;
 let loginModal;
 function createWindow() {
@@ -48,6 +48,7 @@ function createLoginModal(){
    });
 }
 app.whenReady().then(() => {
+     registerAllHandlers();
     createWindow();
 
     const ret = globalShortcut.register('CommandOrControl+Shift+A',()=>{

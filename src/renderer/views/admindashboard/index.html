@@ -464,7 +464,7 @@
 
           if (password === confirmPass) {
             try {
-              const result = await window.api.RegisterUser(fullName, email, password);
+              const result = await window.api.registerUser(fullName, email, password);
 
               if (result.success) {
                 alert(`${result.message}`);

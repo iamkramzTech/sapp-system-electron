@@ -134,3 +134,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore seed files with sensitive content
+database/init/02_insert_defaults.sql

@@ -3,7 +3,7 @@
     const email = document.getElementById("floatingInput").value;
     const password = document.getElementById("floatingPassword").value;
     const message = document.getElementById("message");
-    const result = await window.api.adminlogin(email, password);
+    const result = await window.api.adminLogin(email, password);
   
     if (result.success) {
       localStorage.setItem('email', result.email);
