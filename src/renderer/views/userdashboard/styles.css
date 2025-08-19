@@ -118,3 +118,11 @@
       .bd-mode-toggle .dropdown-menu .active .bi {
         display: block !important;
       }
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+  text-transform: uppercase;
+}

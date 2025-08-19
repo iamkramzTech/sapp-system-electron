@@ -50,6 +50,10 @@ currentUser = { id: user.user_id, name: user.full_name, role: user.roles };
 {
   return currentUser;
 }
+async function getUserSessionByID()
+{
+  return currentUser.id
+}
  async function logout() {
   currentUser = null;
   return { success: true, message: "Logout Bye.." };
@@ -58,5 +62,6 @@ currentUser = { id: user.user_id, name: user.full_name, role: user.roles };
 module.exports = {
   authenticateUser,
   getSession,
+  getUserSessionByID,
   logout
 };

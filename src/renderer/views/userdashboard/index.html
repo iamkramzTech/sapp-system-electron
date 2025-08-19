@@ -255,7 +255,7 @@
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label">Gender<span class="text-danger">*</span></label>
-                <select class="form-select" name="gender" required aria-required="true">
+                <select class="form-select" id="gender" name="gender" required aria-required="true">
                   <option value="">Select</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -263,7 +263,7 @@
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label">Civil Status<span class="text-danger">*</span></label>
-                <select class="form-select" name="civil_status" required aria-required="true">
+                <select class="form-select" id="civilstatus" name="civil_status" required aria-required="true">
                   <option value="">Select</option>
                   <option value="Single">Single</option>
                   <option value="Married">Married</option>
@@ -301,7 +301,7 @@
             <div class="mt-3">
               <label class="form-label">Residence<span class="text-danger">*</span></label>
               <div class="col-md-6 col-12">
-                <input type="text" class="form-control" name="selda" placeholder="Tagup-on, Anahawan Southern Leyte"
+                <input type="text" id="residence" class="form-control" name="residence_address" placeholder="Tagup-on, Anahawan Southern Leyte"
                   required aria-required="true">
               </div>
             </div>
@@ -316,12 +316,12 @@
 
             <div class="row mt-3">
               <div class="col-md-4 col-12">
-                <label class="form-label">Income</label>
-                <input type="number" class="form-control" name="income" placeholder="Income $0.00">
+                <label class="form-label">Income(Put 0.00 if no record )</label>
+                <input type="number" class="form-control" name="income" placeholder="Income $ 0.00">
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label">Contact Number</label>
-                <input type="number" class="form-control" name="contact_number" placeholder="0930xxx">
+                <input type="text" class="form-control" name="contact_number" placeholder="0930xxx">
               </div>
               <div class="col-md-4 col-12">
                 <label class="form-label">Email Address</label>
@@ -399,18 +399,18 @@
               </div>
               <div class="mt-2">
                 <label class="form-label">Archival Reference<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" name="baptism_officiating_minister" placeholder="" required
+                <input type="text" class="form-control" name="baptism_book_archival" placeholder="" required
                   aria-required="true" value="BOOKS OF BIRTH AND BAPTISM" readonly>
               </div>
               <div class="row mt-2">
                 <div class="col-md-6 col-12">
                   <label class="form-label">Male Sponsor<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" name="baptism_sponsors" placeholder="Mr. Sponsor" required
+                  <input type="text" class="form-control" name="baptism_male_sponsor" placeholder="Mr. Sponsor" required
                     aria-required="true">
                 </div>
                 <div class="col-md-6 col-12">
                   <label class="form-label">Female Sponsor<span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" name="baptism_sponsors" placeholder="Ms. Sponsor" required
+                  <input type="text" class="form-control" name="baptism_female_sponsor" placeholder="Ms. Sponsor" required
                     aria-required="true">
                 </div>
               </div>
@@ -508,14 +508,30 @@
       });
 
       try {
+        // Convert ALL text inputs to uppercase
+        for (let key in formData) {
+          if (typeof formData[key] === "string") {
+            formData[key] = formData[key].toUpperCase();
+          }
+  }
+        console.log("First Name: "+formData.first_name);
+        console.log(`Gender: ${formData.gender}`);
+        console.log('civil status: '+formData.civil_status);    
+         console.log(formData.residence_address);
+        console.log(formData.birth_date);
         console.log("BEC: "+formData.bec_member);
         console.log("Town: "+formData.out_town);
+        console.log(formData.baptism_book_archival);
+        console.log(formData.baptism_date);
+        
         const result = await window.api.addParishioner(formData);
 
         if (result.success) {
           alert(result.message);
           form.reset();
-
+          //HACK: reload page to see updates
+          //For better UX use AJAX
+          window.location.reload();
           const modalEl = document.getElementById("addParishionerModal");
           const modalInstance = bootstrap.Modal.getInstance(modalEl);
           modalInstance.hide();
@@ -538,7 +554,7 @@
  
   // Populate table rows
   data.forEach((parishioner) => {
-    const fullName = `${parishioner.first_name} ${parishioner.middle_name || ""} ${parishioner.last_name}`.trim();
+    const fullName = `${parishioner.first_name || ""} ${parishioner.middle_name || ""} ${parishioner.last_name}`.trim();
     const row = document.createElement("tr");
     row.classList.add("align-middle");
     row.innerHTML = `
@@ -577,17 +593,31 @@
     switch (action) {
       case "edit":
         // TODO: Fetch parishioner details and show in modal form
-        const parishionerData = await window.api.getParishionerById(id);
-        if (parishionerData) {
-          // Example: populate modal
-          document.getElementById("firstname").value = parishionerData.first_name;
-          document.getElementById("middlename").value = parishionerData.middle_name;
-          document.getElementById("lastname").value = parishionerData.last_name;
-          document.getElementById("dob").value = parishionerData.birth_date;
+        const response = await window.api.getParishionerById(id);
+        const parishionerData = response.parishioner
+        parishionerData.forEach((p)=>{
+           document.getElementById("firstname").value = p.first_name;
+          document.getElementById("middlename").value = p.middle_name;
+          document.getElementById("lastname").value = p.last_name;
+          const date = new Date(p.birth_date);
+          // Extract parts
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based
+          const year = date.getFullYear();
+
+          // Format dd/MM/yyyy
+          const formattedDate = `${day}/${month}/${year}`;
+          
+          console.log(formattedDate);
+          document.getElementById("dob").value = formattedDate
+          document.getElementById("gender").value = p.gender
+          document.getElementById("civilstatus").value = p.civil_status
+          document.getElementById("residence").value = p.residence_address;
           // Show modal
           const modalEl = new bootstrap.Modal(document.getElementById("addParishionerModal"));
           modalEl.show();
-        }
+        })
+        
         break;
 
       case "print":

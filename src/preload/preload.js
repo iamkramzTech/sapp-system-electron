@@ -21,5 +21,8 @@ contextBridge.exposeInMainWorld('api', {
    logout: () => safeInvoke('logout'),
    getSession: () => safeInvoke('get-session'),
    getUsers: () => safeInvoke('get-users'),
-   resetLoginAttempt: (userId) => safeInvoke('admin-unlock-user', {userId})
+   resetLoginAttempt: (userId) => safeInvoke('admin-unlock-user', {userId}),
+   addParishioner: (formData) => safeInvoke('add-parishioner',formData),
+   getParishioners: () => safeInvoke('get-parishioner'),
+   getParishionerById: (parishionerId) => safeInvoke('get-parishioner-id', {parishionerId})
   });
